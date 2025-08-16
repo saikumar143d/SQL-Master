@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Complete SQL Mastery Guide: Interactive Edition</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- Chosen Palette: Cute & Compact (Pastel Pink, Indigo, Slate) -->
+    <!-- Application Structure Plan: A comprehensive, single-page application with a redesigned tabbed layout for a clear, step-by-step user journey. Each module is a separate tab panel, now with smart navigation buttons to move sequentially. This structure improves navigation and focus. The Gemini API powers the AI Assistant and the "Explain Query" feature. -->
+    <!-- Visualization & Content Choices: 
+    - Report Info: All core concepts -> Goal: Inform/Organize -> Viz: Interactive HTML/CSS Cards & Animated Diagrams -> Interaction: Hover/Click to reveal detailed definitions, keywords, use cases -> Justification: Breaks down complex theory into digestible, layered pieces. -> Library/Method: HTML/Tailwind/JS.
+    - Report Info: All key SQL Commands -> Goal: Simulate/Inform/Explain -> Viz: Interactive Code Simulator -> Interaction: "Run Query" button renders HTML table output. "Explain Query" button calls the Gemini API for a natural language explanation. -> Justification: Provides hands-on feel and deepens understanding with AI assistance. -> Library/Method: HTML/Tailwind/JS/Gemini API.
+    - Report Info: Natural Language to SQL -> Goal: Assist/Teach -> Viz: A dedicated AI assistant module/tab -> Interaction: User types a request, clicks a button, and the Gemini API generates the corresponding SQL query. -> Justification: A powerful feature that bridges the gap between human language and SQL syntax. -> Library/Method: HTML/Tailwind/JS/Gemini API.
+    - Report Info: JOIN operations -> Goal: Explain Relationships -> Viz: Advanced animation showing records moving from source tables to a result table -> Interaction: Select JOIN type to trigger the specific animation and see corresponding syntax/results -> Justification: Visually demystifies this challenging concept. -> Library/Method: HTML/Tailwind/JS.
+    - Report Info: Keywords -> Goal: Reference -> Viz: A categorized, detailed glossary of all SQL keywords in an accordion layout. -> Interaction: Expand/collapse categories -> Justification: Provides a quick and comprehensive reference guide organized by function. -> Library/Method: HTML/Tailwind/JS.
+    - Report Info: Interview Questions -> Goal: Test Knowledge -> Viz: Interactive flashcard quiz -> Interaction: Click cards to reveal answers -> Justification: Reinforces learning through active recall. -> Library/Method: HTML/Tailwind/JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #475569; }
+        .font-heading { font-family: 'Poppins', sans-serif; }
+        .font-mono { font-family: 'Source Code Pro', monospace; }
+        .nav-link { 
+            transition: all 0.2s ease-in-out; 
+            cursor: pointer; 
+            border-radius: 9999px; /* pill shape */
+        }
+        .nav-link.active { 
+            background-color: #ec4899; /* pink-500 */
+            color: white;
+            box-shadow: 0 4px 14px 0 rgb(236 72 153 / 39%);
+        }
+        .nav-link:not(.active):hover { background-color: #fce7f3; /* pink-100 */ color: #be185d; }
+        .concept-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .concept-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
+        .command-btn.active, .category-btn.active { background-color: #4338ca; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .output-table { width: 100%; border-collapse: collapse; }
+        .output-table th, .output-table td { border: 1px solid #e2e8f0; padding: 6px 8px; text-align: left; font-size: 0.875rem; }
+        .output-table th { background-color: #f1f5f9; }
+        details > summary { cursor: pointer; font-weight: 500; list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details > summary::before { content: '▸'; margin-right: 0.5rem; display: inline-block; transition: transform 0.2s; }
+        details[open] > summary::before { transform: rotate(90deg); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .spinner { border: 2px solid #e2e8f0; border-top: 2px solid #ec4899; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Join Animation Styles */
+        .join-animation-container { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; min-height: 280px; }
+        .join-table-viz { background-color: white; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.5rem; font-size: 0.75rem; min-height: 150px; }
+        .join-table-viz .header { font-weight: bold; border-bottom: 1px solid #e2e8f0; margin-bottom: 0.25rem; padding-bottom: 0.25rem; }
+        .join-row { display: flex; justify-content: space-between; padding: 0.25rem; border-radius: 0.25rem; margin-bottom: 0.25rem; transition: all 0.5s ease-in-out; background-color: #f8fafc; }
+        .join-process-area { display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; color: #4338ca; }
+        @keyframes slide-in { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .result-row-enter { animation: slide-in 0.5s forwards; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; font-size: 1.25rem; vertical-align: bottom; margin-right: 0.25rem;}
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-600">
+
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center py-4">
+                 <h1 class="text-xl md:text-2xl font-bold font-heading text-slate-800 flex items-center">
+                    <span class="material-symbols-outlined mr-2 text-pink-500">database</span>
+                    SQL Mastery Guide
+                </h1>
+            </div>
+            <nav class="border-b border-slate-200">
+                <div class="flex flex-wrap gap-2 pb-3">
+                    <a data-tab="foundations" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">foundation</span>Foundations</a>
+                    <a data-tab="setup" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">build_circle</span>Setup</a>
+                    <a data-tab="commands" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">terminal</span>Commands</a>
+                    <a data-tab="keywords" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">key</span>Keywords</a>
+                    <a data-tab="ai-assistant" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">smart_toy</span>AI Assistant</a>
+                    <a data-tab="joins" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">merge_type</span>JOINs</a>
+                    <a data-tab="advanced" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">rocket_launch</span>Advanced</a>
+                    <a data-tab="prep" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">school</span>Interview Prep</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 py-8">
+
+        <section id="foundations" class="tab-panel">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-heading text-slate-800">Module 1: Database Foundations</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mt-3 text-sm md:text-base">A proficient SQL practitioner understands the "why" before the "how". This section breaks down the foundational concepts of relational databases.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">What is Data?</h3>
+                    <p class="text-sm">At its core, data consists of raw, unorganized facts. A number like `150` is data, but it lacks context. A **database** is a system designed to store and manage such data efficiently. **Metadata** (data about data) provides the context, turning raw data into valuable information.</p>
+                </div>
+                <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">SQL vs. NoSQL</h3>
+                    <p class="text-sm"><strong>SQL (Relational):</strong> Stores structured data in tables with a predefined schema. Prioritizes reliability and data integrity (**ACID** properties). Scales **vertically**.
+                    <br><strong>NoSQL (Non-Relational):</strong> Uses flexible data models for unstructured data. Prioritizes scalability and speed (**BASE** principles). Scales **horizontally**.
+                    </p>
+                </div>
+                <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                     <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">The Language of SQL</h3>
+                     <p class="text-sm">SQL (Structured Query Language) is the standard language for relational databases. It's **declarative**: you state *what* you want, and the database determines *how* to get it.
+                     <br><strong>Sublanguages:</strong> DQL, DML, DDL, DCL, TCL.</p>
+                </div>
+                <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">Keys & Constraints</h3>
+                    <p class="text-sm">Rules that enforce data integrity.
+                    <br><strong>Primary Key:</strong> Uniquely identifies each record. Cannot be NULL.
+                    <br><strong>Foreign Key:</strong> Links two tables, enforcing referential integrity.
+                    <br><strong>Constraints:</strong> `NOT NULL`, `UNIQUE`, `CHECK`, `DEFAULT` ensure data accuracy.</p>
+                </div>
+                 <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">Normalization</h3>
+                    <p class="text-sm">The process of organizing data to reduce redundancy and improve data integrity.
+                    <br><strong>1NF:</strong> Ensures columns hold atomic values.
+                    <br><strong>2NF:</strong> No partial dependencies on a composite primary key.
+                    <br><strong>3NF:</strong> No transitive dependencies.</p>
+                </div>
+                <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">ACID Properties</h3>
+                    <p class="text-sm">Guarantees that database transactions are processed reliably.
+                    <br><strong>Atomicity:</strong> All or nothing.
+                    <br><strong>Consistency:</strong> Database remains in a valid state.
+                    <br><strong>Isolation:</strong> Concurrent transactions do not interfere.
+                    <br><strong>Durability:</strong> Committed transactions are permanent.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="setup" class="tab-panel hidden">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-heading text-slate-800">Module 2: Setting Up Your Practice Environment</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mt-3 text-sm md:text-base">To learn SQL, you need a database. We recommend **SQLite** because it's serverless, zero-configuration, and creates a simple file for your database, letting you focus on learning SQL without complex setup.</p>
+            </div>
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                <details class="mb-4 bg-slate-50 p-4 rounded-lg">
+                    <summary class="text-lg font-heading text-slate-700">Installation Instructions</summary>
+                    <div class="mt-4 pl-4 border-l-2 border-pink-300 text-slate-600 space-y-2 text-sm">
+                        <p><strong>Windows:</strong> Download precompiled binaries from the SQLite website, extract them to `C:\sqlite`, and add this folder to your system's PATH.</p>
+                        <p><strong>macOS:</strong> Open Terminal and run `brew install sqlite` (requires Homebrew).</p>
+                        <p><strong>Linux (Debian/Ubuntu):</strong> Open a terminal and run `sudo apt-get install sqlite3`.</p>
+                        <p><strong>Verify:</strong> Open a new terminal and type `sqlite3 --version`. You should see the version number.</p>
+                    </div>
+                </details>
+                <details class="bg-slate-50 p-4 rounded-lg">
+                    <summary class="text-lg font-heading text-slate-700">Loading the Sample HR Database</summary>
+                    <div class="mt-4 pl-4 border-l-2 border-pink-300 text-slate-600 space-y-2 text-sm">
+                        <p>We will use a sample Human Resources (HR) database. Imagine you have downloaded the setup script `hr_database.sql`.</p>
+                        <p>1. Open your terminal.</p>
+                        <p>2. Navigate to where you saved the `.sql` file.</p>
+                        <p>3. Run this command to create and populate the database:</p>
+                        <div class="bg-slate-800 text-white font-mono text-sm p-3 rounded-md">sqlite3 hr.db ".read hr_database.sql"</div>
+                        <p>4. You can now access your database with `sqlite3 hr.db`.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <section id="commands" class="tab-panel hidden">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-heading text-slate-800">Module 3: Core Command Simulator</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mt-3 text-sm md:text-base">Explore the building blocks of SQL with this interactive simulator. Select a command, review the example, run it, and even get an AI-powered explanation of the code.</p>
+            </div>
+            <div class="w-full max-w-6xl mx-auto bg-white rounded-xl shadow-lg border border-slate-200">
+                <div class="p-3 border-b border-slate-200 flex flex-wrap justify-center gap-2 bg-slate-50/50 rounded-t-xl">
+                    <button class="category-btn px-3 py-1.5 text-sm font-medium rounded-md" data-category="dql">DQL (Queries)</button>
+                    <button class="category-btn px-3 py-1.5 text-sm font-medium rounded-md" data-category="dml">DML (Manipulation)</button>
+                    <button class="category-btn px-3 py-1.5 text-sm font-medium rounded-md" data-category="ddl">DDL (Definition)</button>
+                </div>
+                <div id="command-buttons-container" class="p-3 border-b border-slate-200 flex flex-wrap justify-center gap-2"></div>
+                <div id="command-simulator" class="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"></div>
+            </div>
+        </section>
+        
+        <section id="keywords" class="tab-panel hidden">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-heading text-slate-800">SQL Keywords Glossary</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mt-3 text-sm md:text-base">A comprehensive reference for all major SQL keywords and functions, categorized by their role in the language. Click any category to expand it.</p>
+            </div>
+            <div id="keywords-container" class="space-y-3 max-w-4xl mx-auto">
+                <!-- Keywords will be injected here by JS -->
+            </div>
+        </section>
+
+        <section id="ai-assistant" class="tab-panel hidden">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-heading text-slate-800">Module 4: ✨ AI Query Assistant</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mt-3 text-sm md:text-base">Bridge the gap between plain English and SQL. Type a request about the HR database, and our AI assistant, powered by the Gemini API, will generate the SQL query for you.</p>
+            </div>
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                <div class="mb-4">
+                    <label for="nl-input" class="block text-sm font-medium text-slate-700 mb-2">Enter your request:</label>
+                    <textarea id="nl-input" rows="3" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 transition" placeholder="e.g., Show me the first and last names of all employees in the Sales department, ordered by salary from highest to lowest"></textarea>
+                </div>
+                <button id="generate-sql-btn" class="w-full bg-pink-500 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-pink-600 transition-colors flex items-center justify-center shadow-md">
+                    Generate SQL
+                </button>
+                <div id="ai-output-container" class="mt-6">
+                    <!-- AI output will be rendered here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="joins" class="tab-panel hidden">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-heading text-slate-800">Module 5: The Art of the JOIN</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mt-3 text-sm md:text-base">The true power of relational databases lies in combining data from multiple tables. Select a JOIN type below to see an advanced animation of how the join is processed, step-by-step.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                <div class="flex justify-center flex-wrap gap-2 mb-6">
+                    <button class="command-btn px-3 py-2 text-sm rounded-md" data-join="inner">INNER JOIN</button>
+                    <button class="command-btn px-3 py-2 text-sm rounded-md" data-join="left">LEFT JOIN</button>
+                    <button class="command-btn px-3 py-2 text-sm rounded-md" data-join="right">RIGHT JOIN</button>
+                    <button id="reset-join-animation" class="bg-slate-200 px-3 py-2 text-sm rounded-md">Reset</button>
+                </div>
+                <div id="join-animation-container" class="join-animation-container">
+                    <!-- Animation will be built here by JS -->
+                </div>
+                <div id="join-display" class="mt-6 bg-slate-800 text-white rounded-lg p-6"></div>
+            </div>
+        </section>
+
+        <section id="advanced" class="tab-panel hidden">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-heading text-slate-800">Module 6: Advanced Concepts</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mt-3 text-sm md:text-base">Go beyond the basics with these powerful SQL features. This section introduces concepts for writing more sophisticated, efficient, and readable queries.</p>
+            </div>
+            <div class="space-y-6">
+                 <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">Views</h3>
+                    <p class="text-sm">A view is a virtual table based on the result-set of a stored SQL statement. It can simplify complex queries, provide a layer of security by restricting access to underlying tables, and present data in a more intuitive way.
+                    <br><strong>Use Case:</strong> Creating a `V_SALES_REPORT` view that joins `employees`, `orders`, and `products` to simplify daily reporting queries.</p>
+                </div>
+                 <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">Indexes</h3>
+                    <p class="text-sm">An index is a special lookup table that the database search engine can use to speed up data retrieval. An index is a pointer to data in a table.
+                    <br><strong>Types:</strong> Clustered (determines the physical order of data) and Non-Clustered (has a separate structure from the data rows).
+                    <br><strong>Use Case:</strong> Adding an index to the `last_name` column in the `employees` table to significantly speed up searches for employees by their last name.</p>
+                </div>
+                <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">Common Table Expressions (CTEs)</h3>
+                    <p class="text-sm">A CTE, defined with the `WITH` clause, creates a temporary, named result set that you can reference. They dramatically improve the readability and modularity of complex queries.
+                    <br><strong>Use Case:</strong> Breaking a multi-step analysis into logical, readable parts instead of using deeply nested subqueries.</p>
+                </div>
+                <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">Window Functions</h3>
+                    <p class="text-sm">Window functions perform a calculation across a set of table rows related to the current row. Unlike aggregate functions (`SUM`, `AVG`), they do not collapse rows; they return a value for each row.
+                    <br><strong>Keywords:</strong> `OVER()`, `PARTITION BY`, `ROW_NUMBER()`.
+                    <br><strong>Use Case:</strong> Calculating a running total, or ranking employees within each department based on salary.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="prep" class="tab-panel hidden">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold font-heading text-slate-800">Module 7: Interview Prep</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mt-3 text-sm md:text-base">Test your knowledge with these common interview questions. Click on a card to reveal the answer.</p>
+            </div>
+            <div id="quiz-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Quiz cards will be injected here -->
+            </div>
+        </section>
+
+        <div id="smart-switch-container" class="mt-12 flex justify-between items-center">
+            <button id="prev-module-btn" class="bg-white text-slate-600 font-medium py-2 px-4 rounded-lg hover:bg-slate-200 transition-colors flex items-center shadow-sm border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined !text-lg mr-1">arrow_back</span> Previous
+            </button>
+            <button id="next-module-btn" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors flex items-center shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+                Next <span class="material-symbols-outlined !text-lg ml-1">arrow_forward</span>
+            </button>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white mt-16 md:mt-24">
+        <div class="container mx-auto px-6 py-8 text-center text-slate-400"><p>&copy; 2025 SQL Mastery Guide. An interactive learning experience.</p></div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+        const tabOrder = Array.from(navLinks).map(link => link.dataset.tab);
+        let currentTabIndex = 0;
+
+        const prevModuleBtn = document.getElementById('prev-module-btn');
+        const nextModuleBtn = document.getElementById('next-module-btn');
+
+        function updateSmartSwitchButtons() {
+            prevModuleBtn.disabled = currentTabIndex === 0;
+            nextModuleBtn.disabled = currentTabIndex === tabOrder.length - 1;
+        }
+
+        function switchTab(tabId) {
+            currentTabIndex = tabOrder.indexOf(tabId);
+            tabPanels.forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const activePanel = document.getElementById(tabId);
+            const activeLink = document.querySelector(`.nav-link[data-tab="${tabId}"]`);
+            
+            if(activePanel) {
+                activePanel.classList.remove('hidden');
+                activePanel.classList.add('fade-in');
+            }
+            if(activeLink) {
+                activeLink.classList.add('active');
+            }
+            updateSmartSwitchButtons();
+            window.scrollTo(0, 0);
+        }
+        
+        prevModuleBtn.addEventListener('click', () => {
+            if (currentTabIndex > 0) {
+                switchTab(tabOrder[currentTabIndex - 1]);
+            }
+        });
+
+        nextModuleBtn.addEventListener('click', () => {
+            if (currentTabIndex < tabOrder.length - 1) {
+                switchTab(tabOrder[currentTabIndex + 1]);
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = e.target.closest('.nav-link').getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+
+        // Initialize first tab
+        switchTab('foundations');
+
+        const commandContent = {
+            dql: {
+                select: { 
+                    title: 'SELECT...WHERE', description: 'Retrieves data from a table, filtered by a specific condition.', 
+                    code: `SELECT first_name, last_name, salary\nFROM employees\nWHERE department_id = 6;`, 
+                    tip: 'Use `WHERE` to narrow down results and improve query performance.',
+                    output: { headers: ['first_name', 'last_name', 'salary'], rows: [['Alexander', 'Hunold', 9000.00], ['Bruce', 'Ernst', 6000.00], ['David', 'Austin', 4800.00]] }
+                },
+                orderby: {
+                    title: 'ORDER BY', description: 'Sorts the result set in ascending (ASC) or descending (DESC) order.',
+                    code: `SELECT first_name, last_name, salary\nFROM employees\nORDER BY salary DESC;`,
+                    tip: 'You can sort by multiple columns: `ORDER BY col1 ASC, col2 DESC`.',
+                    output: { headers: ['first_name', 'last_name', 'salary'], rows: [['Steven', 'King', 24000.00], ['Neena', 'Kochhar', 17000.00], ['Lex', 'De Haan', 17000.00]] }
+                },
+                groupby: {
+                    title: 'GROUP BY...HAVING', description: 'Groups rows that have the same values into summary rows. `HAVING` filters these groups.',
+                    code: `SELECT department_id, COUNT(employee_id) as num_employees\nFROM employees\nGROUP BY department_id\nHAVING COUNT(employee_id) > 5;`,
+                    tip: '`WHERE` filters rows before grouping; `HAVING` filters groups after grouping.',
+                    output: { headers: ['department_id', 'num_employees'], rows: [[5, 45], [8, 34], [3, 6]] }
+                }
+            },
+            dml: {
+                insert: { 
+                    title: 'INSERT INTO', description: 'Adds new rows of data to a table.', 
+                    code: `INSERT INTO employees (employee_id, first_name, last_name, email, hire_date, job_id, salary)\nVALUES (207, 'John', 'Smith', 'JSMITH', '2024-01-01', 9, 8000);`, 
+                    tip: 'Always specify column names to make your code more resilient to table changes.',
+                    output: { message: '1 row(s) affected.' }
+                },
+                update: { 
+                    title: 'UPDATE', description: 'Modifies existing records in a table. The `WHERE` clause is critical.', 
+                    code: `UPDATE employees\nSET salary = 8500.00\nWHERE employee_id = 207;`, 
+                    tip: 'CRITICAL: Always use a `WHERE` clause, or you will update every row in the table.',
+                    output: { message: '1 row(s) updated.' }
+                },
+                delete: { 
+                    title: 'DELETE', description: 'Removes existing records from a table. The `WHERE` clause is critical.', 
+                    code: `DELETE FROM employees\nWHERE employee_id = 207;`, 
+                    tip: 'CRITICAL: Always use a `WHERE` clause, or you will delete every row.',
+                    output: { message: '1 row(s) deleted.' }
+                }
+            },
+            ddl: {
+                create: { 
+                    title: 'CREATE TABLE', description: 'Creates a new table in the database, defining its columns and data types.', 
+                    code: `CREATE TABLE projects (\n    project_id INTEGER PRIMARY KEY,\n    project_name VARCHAR(100) NOT NULL,\n    budget DECIMAL(12, 2)\n);`, 
+                    tip: 'Choose the most appropriate data types for your columns to ensure data integrity.',
+                    output: { message: 'Table "projects" created successfully.' }
+                },
+                alter: { 
+                    title: 'ALTER TABLE', description: 'Modifies an existing table structure (add, drop, or modify columns).', 
+                    code: `ALTER TABLE projects\nADD COLUMN project_manager_id INTEGER;`, 
+                    tip: 'Be cautious when altering tables with existing data, as it can be a slow or destructive operation.',
+                    output: { message: 'Table "projects" altered.' }
+                },
+                drop: { 
+                    title: 'DROP TABLE', description: 'Permanently deletes a table and all its data. This action is irreversible.', 
+                    code: `DROP TABLE old_projects;`, 
+                    tip: 'Use with extreme caution. `TRUNCATE` removes all rows but keeps the table structure.',
+                    output: { message: 'Table "old_projects" dropped.' }
+                }
+            }
+        };
+
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const commandBtnsContainer = document.getElementById('command-buttons-container');
+        const simulatorContainer = document.getElementById('command-simulator');
+
+        function renderCommandButtons(category) {
+            commandBtnsContainer.innerHTML = '';
+            Object.keys(commandContent[category]).forEach(command => {
+                const content = commandContent[category][command];
+                const button = document.createElement('button');
+                button.className = 'command-btn px-3 py-1.5 text-sm font-medium rounded-md bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200';
+                button.dataset.command = command;
+                button.textContent = content.title;
+                button.addEventListener('click', () => showSimulator(category, command));
+                commandBtnsContainer.appendChild(button);
+            });
+        }
+
+        function showSimulator(category, command) {
+            const content = commandContent[category][command];
+            simulatorContainer.innerHTML = `
+                <div>
+                    <h3 class="text-xl font-bold font-heading text-slate-800 mb-2">${content.title}</h3>
+                    <p class="text-slate-600 mb-4 text-sm">${content.description}</p>
+                    <div class="bg-slate-800 text-white rounded-lg p-4 mb-4">
+                        <pre><code id="current-query" class="font-mono text-sm">${content.code}</code></pre>
+                    </div>
+                    <div class="bg-pink-100 border-l-4 border-pink-400 text-pink-800 p-4 rounded-r-lg text-sm">
+                        <p><strong>Tip:</strong> ${content.tip}</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex space-x-2 mb-4">
+                        <button id="run-query-btn" class="flex-1 bg-indigo-500 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-600 transition-colors shadow">Run Query &#9654;</button>
+                        <button id="explain-query-btn" class="flex-1 bg-slate-600 text-white font-bold py-2 px-4 rounded-md hover:bg-slate-700 transition-colors shadow">✨ Explain Query</button>
+                    </div>
+                    <div id="output-container" class="bg-white p-4 rounded-lg border border-slate-200 min-h-[200px] overflow-x-auto">
+                        <p class="text-slate-400 text-sm">Click "Run Query" to see simulated output or "Explain Query" for an AI explanation.</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('run-query-btn').addEventListener('click', () => {
+                const outputContainer = document.getElementById('output-container');
+                outputContainer.innerHTML = `<div class="flex items-center justify-center h-full"><div class="spinner"></div><p class="ml-3 text-slate-500">Executing...</p></div>`;
+                
+                setTimeout(() => {
+                    outputContainer.innerHTML = ''; 
+                    if (content.output.message) {
+                        outputContainer.innerHTML = `<p class="font-mono text-green-600 text-sm fade-in">${content.output.message}</p>`;
+                    } else if (content.output.rows) {
+                        let tableHTML = '<table class="output-table fade-in"><thead><tr>';
+                        content.output.headers.forEach(h => tableHTML += `<th>${h}</th>`);
+                        tableHTML += '</tr></thead><tbody>';
+                        content.output.rows.forEach(row => {
+                            tableHTML += '<tr>';
+                            row.forEach(cell => tableHTML += `<td>${cell}</td>`);
+                            tableHTML += '</tr>';
+                        });
+                        tableHTML += '</tbody></table>';
+                        outputContainer.innerHTML = tableHTML;
+                    }
+                }, 500);
+            });
+
+            document.getElementById('explain-query-btn').addEventListener('click', handleExplainQuery);
+
+            commandBtnsContainer.querySelectorAll('.command-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.command === command);
+            });
+        }
+
+        function showCategory(category) {
+            categoryBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.category === category));
+            renderCommandButtons(category);
+            const firstCommand = Object.keys(commandContent[category])[0];
+            showSimulator(category, firstCommand);
+        }
+
+        categoryBtns.forEach(btn => btn.addEventListener('click', () => showCategory(btn.dataset.category)));
+        showCategory('dql');
+
+        // JOIN Animation Logic
+        const joinContent = {
+            inner: { title: 'INNER JOIN', description: 'Returns records that have matching values in both tables.', code: `SELECT e.name, d.dept_name\nFROM Employees e\nINNER JOIN Departments d ON e.dept_id = d.id;` },
+            left: { title: 'LEFT JOIN', description: 'Returns all records from the left table (Employees), and the matched records from the right table.', code: `SELECT e.name, d.dept_name\nFROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.id;` },
+            right: { title: 'RIGHT JOIN', description: 'Returns all records from the right table (Departments), and the matched records from the left table.', code: `SELECT e.name, d.dept_name\nFROM Employees e\nRIGHT JOIN Departments d ON e.dept_id = d.id;` }
+        };
+        const joinAnimationContainer = document.getElementById('join-animation-container');
+        const joinDisplay = document.getElementById('join-display');
+        const joinBtns = document.querySelectorAll('#joins .command-btn');
+        
+        const employeesData = [ { id: 1, name: 'Alice', dept_id: 101 }, { id: 2, name: 'Bob', dept_id: 102 }, { id: 3, name: 'Charlie', dept_id: 101 }, { id: 4, name: 'David', dept_id: null } ];
+        const departmentsData = [ { id: 101, dept_name: 'Sales' }, { id: 102, dept_name: 'IT' }, { id: 103, dept_name: 'HR' } ];
+
+        function createTableViz(title, data, headers) {
+            let rowsHtml = data.map(row => `<div class="join-row" data-id="${row.id}" data-key="${row.dept_id !== undefined ? row.dept_id : row.id}">${headers.map(h => `<span>${row[h] || 'NULL'}</span>`).join('')}</div>`).join('');
+            return `<div class="join-table-viz"><div class="header">${title}</div><div id="${title.toLowerCase()}-rows">${rowsHtml}</div></div>`;
+        }
+
+        function runJoinAnimation(joinType) {
+            joinAnimationContainer.innerHTML = `
+                ${createTableViz('Employees', employeesData, ['name', 'dept_id'])}
+                <div id="join-process-area" class="join-process-area">ON e.dept_id = d.id</div>
+                ${createTableViz('Departments', departmentsData, ['id', 'dept_name'])}
+            `;
+            
+            const resultContainer = document.createElement('div');
+            resultContainer.className = 'join-table-viz col-span-3 mt-4';
+            resultContainer.innerHTML = `<div class="header">Result</div><div id="result-rows"></div>`;
+            if (joinAnimationContainer.parentElement.querySelector('.col-span-3')) {
+                joinAnimationContainer.parentElement.querySelector('.col-span-3').remove();
+            }
+            joinAnimationContainer.parentElement.appendChild(resultContainer);
+
+            const resultRowsContainer = document.getElementById('result-rows');
+            
+            let delay = 0;
+            const resultData = [];
+
+            if (joinType === 'inner') {
+                employeesData.forEach(e => {
+                    const d = departmentsData.find(d => d.id === e.dept_id);
+                    if (d) resultData.push({ name: e.name, dept_name: d.dept_name });
+                });
+            } else if (joinType === 'left') {
+                 employeesData.forEach(e => {
+                    const d = departmentsData.find(d => d.id === e.dept_id);
+                    resultData.push({ name: e.name, dept_name: d ? d.dept_name : 'NULL' });
+                });
+            } else if (joinType === 'right') {
+                departmentsData.forEach(d => {
+                    const emps = employeesData.filter(e => e.dept_id === d.id);
+                    if (emps.length > 0) {
+                        emps.forEach(e => resultData.push({ name: e.name, dept_name: d.dept_name }));
+                    } else {
+                        resultData.push({ name: 'NULL', dept_name: d.dept_name });
+                    }
+                });
+            }
+
+            resultData.forEach(res => {
+                setTimeout(() => {
+                    const newRow = document.createElement('div');
+                    newRow.className = 'join-row result-row-enter bg-green-100';
+                    newRow.innerHTML = `<span>${res.name}</span><span>${res.dept_name}</span>`;
+                    resultRowsContainer.appendChild(newRow);
+                }, delay);
+                delay += 300;
+            });
+        }
+
+        function showJoin(joinType) {
+            if (!joinContent[joinType]) return;
+            const content = joinContent[joinType];
+            joinDisplay.innerHTML = `
+                <h3 class="text-xl font-bold font-heading text-pink-400 mb-2">${content.title}</h3>
+                <p class="text-slate-300 mb-4 text-sm">${content.description}</p>
+                <div class="bg-slate-900 rounded p-3">
+                    <pre><code class="font-mono text-xs text-pink-300">${content.code}</code></pre>
+                </div>`;
+            
+            joinBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.join === joinType));
+            runJoinAnimation(joinType);
+        }
+        
+        document.getElementById('reset-join-animation').addEventListener('click', () => {
+            const activeJoin = document.querySelector('#joins .command-btn.active')?.dataset.join || 'inner';
+            showJoin(activeJoin);
+        });
+
+        joinBtns.forEach(btn => btn.addEventListener('click', () => showJoin(btn.dataset.join)));
+        showJoin('inner');
+
+        // Gemini API Integration
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+        async function callGeminiAPI(prompt) {
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) { throw new Error(`API call failed with status: ${response.status}`); }
+                const result = await response.json();
+                if (result.candidates && result.candidates[0].content.parts[0].text) {
+                    return result.candidates[0].content.parts[0].text;
+                } else { return "Sorry, I couldn't get a response. Please try again."; }
+            } catch (error) {
+                console.error("Gemini API call error:", error);
+                return "An error occurred while contacting the AI assistant.";
+            }
+        }
+
+        async function handleExplainQuery() {
+            const query = document.getElementById('current-query').innerText;
+            const outputContainer = document.getElementById('output-container');
+            outputContainer.innerHTML = `<div class="flex items-center justify-center h-full"><div class="spinner"></div><p class="ml-3 text-slate-500">AI is thinking...</p></div>`;
+            
+            const prompt = `Explain the following SQL query in simple, step-by-step terms for a beginner. Format the output as simple HTML paragraphs:\n\n${query}`;
+            const explanation = await callGeminiAPI(prompt);
+
+            outputContainer.innerHTML = `<div class="text-sm text-slate-700 p-2 bg-sky-50 rounded-md fade-in">${explanation}</div>`;
+        }
+
+        const generateSqlBtn = document.getElementById('generate-sql-btn');
+        const nlInput = document.getElementById('nl-input');
+        const aiOutputContainer = document.getElementById('ai-output-container');
+
+        generateSqlBtn.addEventListener('click', async () => {
+            const userInput = nlInput.value;
+            if (!userInput.trim()) {
+                aiOutputContainer.innerHTML = `<p class="text-red-500 text-sm">Please enter a request.</p>`;
+                return;
+            }
+
+            aiOutputContainer.innerHTML = `<div class="flex items-center"><div class="spinner"></div><p class="ml-3 text-slate-500">Generating SQL...</p></div>`;
+            
+            const schemaInfo = "HR database schema: employees(employee_id, first_name, last_name, salary, department_id), departments(department_id, department_name)";
+            const prompt = `Based on this schema: ${schemaInfo}. Translate the following request into a valid SQL query. Only return the SQL code inside a markdown block. Request: "${userInput}"`;
+            
+            let generatedSql = await callGeminiAPI(prompt);
+            generatedSql = generatedSql.replace(/```sql\n|```/g, '').trim();
+
+            aiOutputContainer.innerHTML = `
+                <h4 class="text-md font-semibold text-slate-800 mb-2">Generated SQL:</h4>
+                <div class="bg-slate-800 text-white rounded-lg p-4 mb-4">
+                    <pre><code class="font-mono text-sm">${generatedSql}</code></pre>
+                </div>
+            `;
+        });
+        
+        // Interview Prep Logic
+        const quizData = [
+            { q: "What is the difference between DELETE and TRUNCATE?", a: "DELETE is a DML command that removes rows one by one and can be rolled back. TRUNCATE is a DDL command that deallocates all space for a table without logging individual deletions and cannot be rolled back." },
+            { q: "What are the ACID properties?", a: "Atomicity (all or nothing), Consistency (database remains in a valid state), Isolation (concurrent transactions don't affect each other), Durability (committed transactions are permanent)." },
+            { q: "What is the difference between a Primary Key and a Unique Key?", a: "Both enforce uniqueness. A table can have only one Primary Key, which cannot contain NULL values. A table can have multiple Unique Keys, which can accept one NULL value." },
+            { q: "What is the difference between UNION and UNION ALL?", a: "UNION combines result sets and removes duplicate rows. UNION ALL combines result sets but includes all rows, including duplicates. UNION ALL is faster." },
+            { q: "What is an Index and why is it useful?", a: "An index is a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and storage space. It's like an index in the back of a book." },
+            { q: "What is Normalization?", a: "It is the process of organizing columns and tables in a relational database to minimize data redundancy. The main forms are 1NF, 2NF, and 3NF." },
+            { q: "What is the difference between clustered and non-clustered indexes?", a: "A clustered index determines the physical order of data in a table. A table can have only one clustered index. A non-clustered index has a separate structure from the data rows, which points back to the data. A table can have many non-clustered indexes." },
+            { q: "What are the different types of JOINs?", a: "INNER JOIN (returns matching rows), LEFT JOIN (returns all rows from the left table), RIGHT JOIN (returns all rows from the right table), and FULL OUTER JOIN (returns all rows when there is a match in one of the tables)." },
+            { q: "What is the difference between WHERE and HAVING?", a: "The WHERE clause filters rows before they are grouped by the GROUP BY clause. The HAVING clause filters groups after the GROUP BY clause has been applied. You use HAVING with aggregate functions." },
+            { q: "What is a View in SQL?", a: "A View is a virtual table based on the result-set of a stored SQL query. It simplifies complex queries and can be used to restrict access to data." },
+            { q: "What is the CAP Theorem in NoSQL?", a: "The CAP Theorem states that a distributed database can only provide two of three guarantees simultaneously: Consistency (all nodes see the same data at the same time), Availability (every request receives a response), and Partition Tolerance (the system continues to operate despite network partitions)." },
+            { q: "What is the difference between vertical and horizontal scaling?", a: "Vertical scaling (scaling up) means increasing the resources of a single server (e.g., more CPU, RAM). Horizontal scaling (scaling out) means adding more servers to a system. SQL databases typically scale vertically, while NoSQL databases are designed to scale horizontally." }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        quizData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'concept-card bg-white rounded-lg shadow-sm border border-slate-200 cursor-pointer p-4';
+            card.innerHTML = `<div class="question font-semibold text-slate-700">${item.q}</div><div class="answer text-slate-600 mt-2 hidden text-sm">${item.a}</div>`;
+            card.addEventListener('click', () => {
+                card.querySelector('.answer').classList.toggle('hidden');
+            });
+            quizContainer.appendChild(card);
+        });
+
+        // Keywords Logic
+        const keywordsData = {
+            "Data Definition Language (DDL)": [
+                { keyword: 'CREATE', syntax: 'CREATE TABLE table_name (...);', description: 'Used to create new database objects like tables, views, or indexes.' },
+                { keyword: 'ALTER', syntax: 'ALTER TABLE table_name ADD column_name datatype;', description: 'Modifies the structure of an existing database object.' },
+                { keyword: 'DROP', syntax: 'DROP TABLE table_name;', description: 'Permanently deletes a database object.' },
+                { keyword: 'TRUNCATE', syntax: 'TRUNCATE TABLE table_name;', description: 'Quickly deletes all rows from a table, but not the table itself. This operation cannot be rolled back.' },
+                { keyword: 'RENAME', syntax: 'ALTER TABLE table_name RENAME TO new_table_name;', description: 'Renames a database object.' }
+            ],
+            "Data Manipulation Language (DML)": [
+                { keyword: 'INSERT', syntax: 'INSERT INTO table_name (col1, col2) VALUES (val1, val2);', description: 'Adds new rows of data to a table.' },
+                { keyword: 'UPDATE', syntax: 'UPDATE table_name SET col1 = val1 WHERE condition;', description: 'Modifies existing records in a table.' },
+                { keyword: 'DELETE', syntax: 'DELETE FROM table_name WHERE condition;', description: 'Removes rows from a table.' }
+            ],
+            "Data Query Language (DQL)": [
+                { keyword: 'SELECT', syntax: 'SELECT column1, column2 FROM table_name;', description: 'Retrieves data from one or more tables.' }
+            ],
+            "Data Control Language (DCL)": [
+                { keyword: 'GRANT', syntax: 'GRANT SELECT, UPDATE ON my_table TO user_name;', description: 'Gives a user access privileges to the database.' },
+                { keyword: 'REVOKE', syntax: 'REVOKE SELECT, UPDATE ON my_table FROM user_name;', description: 'Takes back access privileges from a user.' }
+            ],
+            "Transaction Control Language (TCL)": [
+                { keyword: 'COMMIT', syntax: 'COMMIT;', description: 'Saves all the transactions to the database permanently.' },
+                { keyword: 'ROLLBACK', syntax: 'ROLLBACK;', description: 'Undoes transactions that have not already been saved to the database.' },
+                { keyword: 'SAVEPOINT', syntax: 'SAVEPOINT savepoint_name;', description: 'Temporarily saves a transaction so that you can roll back to that point whenever necessary.' }
+            ],
+            "Clauses & Operators": [
+                { keyword: 'WHERE', syntax: '... WHERE condition;', description: 'Filters records based on a specific condition.' },
+                { keyword: 'ORDER BY', syntax: '... ORDER BY column ASC|DESC;', description: 'Sorts the result set in ascending or descending order.' },
+                { keyword: 'GROUP BY', syntax: '... GROUP BY column_name;', description: 'Groups rows that have the same values into summary rows.' },
+                { keyword: 'HAVING', syntax: '... HAVING condition;', description: 'Filters groups based on a condition, used after GROUP BY.' },
+                { keyword: 'LIKE', syntax: "... WHERE column LIKE '%pattern%';", description: 'Performs pattern matching in string searches.' },
+                { keyword: 'BETWEEN', syntax: '... WHERE column BETWEEN value1 AND value2;', description: 'Selects values within a given range.' },
+                { keyword: 'IN', syntax: "... WHERE column IN (value1, value2);", description: 'Specifies multiple possible values for a column.' },
+                { keyword: 'AS (Alias)', syntax: 'SELECT column AS alias_name ...;', description: 'Renames a column or table temporarily.' },
+                { keyword: 'DISTINCT', syntax: 'SELECT DISTINCT column FROM table_name;', description: 'Returns only unique values.' },
+                { keyword: 'UNION', syntax: 'SELECT ... UNION SELECT ...;', description: 'Combines the result-set of two SELECT statements (removes duplicates).' },
+                { keyword: 'UNION ALL', syntax: 'SELECT ... UNION ALL SELECT ...;', description: 'Combines the result-set of two SELECT statements (includes duplicates).' }
+            ],
+            "Aggregate Functions": [
+                { keyword: 'COUNT()', syntax: 'SELECT COUNT(column) FROM table_name;', description: 'Returns the number of rows.' },
+                { keyword: 'SUM()', syntax: 'SELECT SUM(column) FROM table_name;', description: 'Returns the total sum of a numeric column.' },
+                { keyword: 'AVG()', syntax: 'SELECT AVG(column) FROM table_name;', description: 'Returns the average value of a numeric column.' },
+                { keyword: 'MIN()', syntax: 'SELECT MIN(column) FROM table_name;', description: 'Returns the smallest value in a column.' },
+                { keyword: 'MAX()', syntax: 'SELECT MAX(column) FROM table_name;', description: 'Returns the largest value in a column.' }
+            ]
+        };
+
+        const keywordsContainer = document.getElementById('keywords-container');
+
+        function renderKeywords() {
+            keywordsContainer.innerHTML = '';
+            for (const category in keywordsData) {
+                const details = document.createElement('details');
+                details.className = 'bg-white rounded-lg shadow-sm border border-slate-200';
+                
+                const summary = document.createElement('summary');
+                summary.className = 'text-lg font-heading text-slate-700 p-4 cursor-pointer';
+                summary.textContent = category;
+                details.appendChild(summary);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'p-4 border-t border-slate-200 space-y-4';
+                
+                keywordsData[category].forEach(item => {
+                    const keywordEl = document.createElement('div');
+                    keywordEl.className = 'bg-slate-50 p-4 rounded-lg';
+                    keywordEl.innerHTML = `
+                        <h4 class="text-md font-bold font-heading text-slate-800">${item.keyword}</h4>
+                        <p class="text-slate-600 text-sm mt-1 mb-3">${item.description}</p>
+                        <div class="bg-slate-800 text-white rounded p-2">
+                            <pre><code class="font-mono text-xs">${item.syntax}</code></pre>
+                        </div>
+                    `;
+                    contentDiv.appendChild(keywordEl);
+                });
+                
+                details.appendChild(contentDiv);
+                keywordsContainer.appendChild(details);
+            }
+        }
+        renderKeywords();
+
+    });
+    </script>
+</body>
+</html>
