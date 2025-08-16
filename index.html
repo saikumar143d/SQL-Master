@@ -100,65 +100,151 @@
             </div>
             <div class="space-y-8">
                 <div class="concept-card bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">What is a Database?</h3>
-                    <p class="text-sm mb-4">A database is an organized collection of structured information, or data, typically stored electronically in a computer system. It's designed for efficient storage, retrieval, and management of data. Think of it as a highly organized digital filing cabinet.</p>
-                    <div class="grid md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <h4 class="font-semibold text-slate-600">Key Components:</h4>
-                            <ul class="list-disc list-inside mt-2 space-y-1">
-                                <li><strong>Data:</strong> The raw facts and figures.</li>
-                                <li><strong>DBMS (Database Management System):</strong> The software that interacts with users, applications, and the database itself to capture and analyze the data (e.g., MySQL, PostgreSQL, SQLite).</li>
-                                <li><strong>Schema:</strong> The blueprint of the database which defines the structure, data types, and relationships between data.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-slate-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-slate-600">Analogy: A Library</h4>
-                            <p class="mt-2">A database is like a library. The books are the <strong>data</strong>. The library building and shelves are the <strong>storage structure</strong>. The librarian and catalog system are the <strong>DBMS</strong>, helping you find and manage the books efficiently.</p>
-                        </div>
-                    </div>
+                    <p class="text-sm mb-4"><strong>SQL (Structured Query Language)</strong> is the standard language for managing and manipulating relational databases. To build a solid foundation, you should master the following core concepts, starting from the basic building blocks and moving toward more complex operations.</p>
                 </div>
 
                 <div class="concept-card bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">SQL: The Language of Databases</h3>
-                    <p class="text-sm mb-4">SQL (Structured Query Language) is the standard programming language used to communicate with relational databases. It allows you to perform tasks such as retrieving data, updating data, and managing the database structure.</p>
-                    <div class="text-center my-4">
-                        <svg class="w-full max-w-lg mx-auto" viewBox="0 0 300 100">
-                             <text x="150" y="15" font-family="Inter" font-size="10" text-anchor="middle" fill="#475569">User/Application</text>
-                             <path d="M 150 20 V 35" stroke="#94a3b8" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
-                             <rect x="100" y="35" width="100" height="20" rx="3" fill="#e2e8f0"/>
-                             <text x="150" y="48" font-family="Source Code Pro" font-size="8" text-anchor="middle" fill="#1e293b">SQL QUERY</text>
-                             <path d="M 150 55 V 70" stroke="#94a3b8" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
-                             <rect x="50" y="70" width="200" height="25" rx="3" fill="#bfdbfe"/>
-                             <text x="150" y="85" font-family="Inter" font-size="10" text-anchor="middle" fill="#1e3a8a">Database (DBMS)</text>
-                             <defs><marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/></marker></defs>
-                        </svg>
-                    </div>
-                    <p class="text-sm">SQL is <strong>declarative</strong>, meaning you specify *what* you want the result to be, and the DBMS figures out *how* to achieve it. This is different from imperative languages (like Python or Java) where you must specify the step-by-step logic.</p>
-                </div>
-
-                <div class="concept-card bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">Relational vs. Non-Relational (SQL vs. NoSQL)</h3>
-                    <p class="text-sm mb-4">Databases are broadly categorized into two types: relational (SQL) and non-relational (NoSQL). Each has its own strengths and is suited for different types of applications.</p>
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">The Four Sub-Languages of SQL</h3>
+                    <p class="text-sm mb-4">SQL commands are often categorized into four main groups. Understanding this division helps clarify the purpose of each command.</p>
+                    <div class="grid md:grid-cols-2 gap-6 text-sm">
                         <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                            <h4 class="font-bold text-blue-800">SQL (Relational)</h4>
-                            <p class="text-xs mt-2 text-blue-700">Organizes data in tables with rows and columns. Uses a predefined schema.</p>
-                            <ul class="text-sm mt-3 space-y-1">
-                                <li>✅ <strong>Strengths:</strong> Data integrity (ACID), consistency, suitable for complex queries.</li>
-                                <li>❌ <strong>Weaknesses:</strong> Less flexible schema, scales vertically (harder to scale out).</li>
-                                <li><strong>Use Cases:</strong> Financial systems, e-commerce platforms, any application where data consistency is critical.</li>
+                            <h4 class="font-bold text-blue-800">DDL (Data Definition Language)</h4>
+                            <p class="text-xs mt-1 text-blue-700">Defines and manages the database structure (the blueprint).</p>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><strong>CREATE:</strong> To make a new database, table, or view.</li>
+                                <li><strong>ALTER:</strong> To modify the structure of an existing table.</li>
+                                <li><strong>DROP:</strong> To permanently delete a database, table, or view.</li>
+                                <li><strong>TRUNCATE:</strong> To quickly remove all rows from a table.</li>
                             </ul>
                         </div>
                         <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-                            <h4 class="font-bold text-green-800">NoSQL (Non-Relational)</h4>
-                            <p class="text-xs mt-2 text-green-700">Stores data in various formats like key-value pairs, documents, or graphs. Schema is dynamic.</p>
-                             <ul class="text-sm mt-3 space-y-1">
-                                <li>✅ <strong>Strengths:</strong> High scalability (scales horizontally), flexible schema, high performance for simple lookups.</li>
-                                <li>❌ <strong>Weaknesses:</strong> Eventual consistency (BASE), less suitable for complex, joined queries.</li>
-                                <li><strong>Use Cases:</strong> Big data applications, social media feeds, real-time web apps.</li>
+                            <h4 class="font-bold text-green-800">DML (Data Manipulation Language) ✍️</h4>
+                            <p class="text-xs mt-1 text-green-700">Used to interact with the data within the tables.</p>
+                             <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><strong>SELECT:</strong> To retrieve data from one or more tables.</li>
+                                <li><strong>INSERT:</strong> To add new rows of data into a table.</li>
+                                <li><strong>UPDATE:</strong> To modify existing rows in a table.</li>
+                                <li><strong>DELETE:</strong> To remove specific rows from a table.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                            <h4 class="font-bold text-yellow-800">DCL (Data Control Language)</h4>
+                            <p class="text-xs mt-1 text-yellow-700">Manages user permissions and access rights.</p>
+                             <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><strong>GRANT:</strong> To give specific permissions to a database user.</li>
+                                <li><strong>REVOKE:</strong> To take away permissions from a user.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                            <h4 class="font-bold text-purple-800">TCL (Transaction Control Language)</h4>
+                            <p class="text-xs mt-1 text-purple-700">Manages transactions (sequences of operations).</p>
+                             <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><strong>COMMIT:</strong> To save all changes made in a transaction.</li>
+                                <li><strong>ROLLBACK:</strong> To undo all changes made in a transaction.</li>
+                                <li><strong>SAVEPOINT:</strong> To set a point within a transaction to roll back to.</li>
                             </ul>
                         </div>
                     </div>
+                </div>
+
+                <div class="concept-card bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">The SELECT Statement: The Heart of SQL</h3>
+                    <p class="text-sm mb-4">The <code>SELECT</code> statement is the most important and widely used command for retrieving data. A complete query follows a specific logical order of operations.</p>
+                    <ul class="list-decimal list-inside space-y-2 text-sm mb-4">
+                        <li><strong>SELECT:</strong> Specifies the columns you want to retrieve. Use <code>*</code> to select all columns.</li>
+                        <li><strong>FROM:</strong> Specifies the table you are querying from.</li>
+                        <li><strong>WHERE:</strong> Filters rows based on specific conditions. You'll use comparison operators (<code>=, !=, <, ></code>), logical operators (<code>AND, OR, NOT</code>), and pattern matching (<code>LIKE, IN, BETWEEN</code>).</li>
+                        <li><strong>GROUP BY:</strong> Aggregates rows that have the same values into summary rows. It's often used with aggregate functions.</li>
+                        <li><strong>HAVING:</strong> Filters groups created by the <code>GROUP BY</code> clause, similar to how <code>WHERE</code> filters rows.</li>
+                        <li><strong>ORDER BY:</strong> Sorts the final result set in ascending (<code>ASC</code>) or descending (<code>DESC</code>) order.</li>
+                        <li><strong>LIMIT / TOP:</strong> Restricts the number of rows returned. (Syntax varies by SQL dialect).</li>
+                    </ul>
+                    <h4 class="font-semibold text-slate-600 mb-2">Example Query Structure:</h4>
+                    <div class="bg-slate-800 text-white rounded-lg p-4">
+                        <pre><code class="font-mono text-sm">SELECT column1, column2
+FROM table_name
+WHERE condition
+GROUP BY column1
+HAVING condition_on_group
+ORDER BY column2 DESC
+LIMIT 10;</code></pre>
+                    </div>
+                </div>
+
+                <div class="concept-card bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">Constraints & Data Types</h3>
+                    <p class="text-sm mb-4">These rules ensure the integrity and reliability of the data in your database.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold text-slate-600 mb-2">Common Data Types</h4>
+                             <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>Text:</strong> <code>VARCHAR</code>, <code>TEXT</code>, <code>CHAR</code></li>
+                                <li><strong>Numeric:</strong> <code>INT</code> (or <code>INTEGER</code>), <code>FLOAT</code>, <code>DECIMAL</code></li>
+                                <li><strong>Date/Time:</strong> <code>DATE</code>, <code>TIME</code>, <code>TIMESTAMP</code></li>
+                                <li><strong>Boolean:</strong> <code>BOOLEAN</code></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-slate-600 mb-2">Constraints</h4>
+                             <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>PRIMARY KEY:</strong> Uniquely identifies each record in a table.</li>
+                                <li><strong>FOREIGN KEY:</strong> Links two tables together.</li>
+                                <li><strong>UNIQUE:</strong> Ensures that all values in a column are different.</li>
+                                <li><strong>NOT NULL:</strong> Ensures that a column cannot have a NULL value.</li>
+                                <li><strong>DEFAULT:</strong> Provides a default value for a column.</li>
+                                <li><strong>CHECK:</strong> Ensures values in a column satisfy a specific condition.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">JOINs: Combining Data from Multiple Tables 🤝</h3>
+                    <p class="text-sm mb-4"><code>JOIN</code> clauses are used to combine rows from two or more tables based on a related column between them. This is a fundamental concept in relational databases.</p>
+                    <ul class="list-disc list-inside space-y-2 text-sm">
+                        <li><strong>INNER JOIN:</strong> Returns records that have matching values in both tables.</li>
+                        <li><strong>LEFT JOIN (or LEFT OUTER JOIN):</strong> Returns all records from the left table, and the matched records from the right table. The result is NULL from the right side if there is no match.</li>
+                        <li><strong>RIGHT JOIN (or RIGHT OUTER JOIN):</strong> Returns all records from the right table, and the matched records from the left table. The result is NULL from the left side if there is no match.</li>
+                        <li><strong>FULL OUTER JOIN:</strong> Returns all records when there is a match in either the left or right table. It combines the results of both LEFT and RIGHT joins.</li>
+                    </ul>
+                </div>
+                
+                <div class="concept-card bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">Important Functions & Operators</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-slate-600 mb-2">Aggregate Functions</h4>
+                            <p class="text-sm mb-2">Perform a calculation on a set of values and return a single value.</p>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>COUNT():</strong> Counts the number of rows.</li>
+                                <li><strong>SUM():</strong> Calculates the sum of values.</li>
+                                <li><strong>AVG():</strong> Calculates the average of values.</li>
+                                <li><strong>MIN() / MAX():</strong> Returns the smallest/largest value.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-slate-600 mb-2">Set Operators</h4>
+                            <p class="text-sm mb-2">Combine the result sets of two or more <code>SELECT</code> statements.</p>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>UNION:</strong> Combines two result sets and removes duplicate rows.</li>
+                                <li><strong>UNION ALL:</strong> Combines two result sets but includes all duplicate rows.</li>
+                                <li><strong>INTERSECT:</strong> Returns only the rows that appear in both result sets.</li>
+                                <li><strong>EXCEPT:</strong> Returns rows from the first query that are not present in the second.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold font-heading text-slate-700 mb-3">Advanced Foundational Concepts 🏛️</h3>
+                    <p class="text-sm mb-4">Once you are comfortable with the above, these concepts are the next step to a solid foundation.</p>
+                    <ul class="list-disc list-inside space-y-3 text-sm">
+                        <li><strong>Subqueries (Nested Queries):</strong> A query placed inside another query. They can be used in <code>SELECT</code>, <code>FROM</code>, <code>WHERE</code>, or <code>HAVING</code> clauses to perform complex filtering and data retrieval.</li>
+                        <li><strong>Common Table Expressions (CTEs):</strong> A temporary, named result set that you can reference within a statement. CTEs, defined using the <code>WITH</code> clause, improve readability of complex queries.</li>
+                        <li><strong>Views:</strong> A virtual table based on the result-set of an SQL statement. A view can be used to simplify complex queries, provide a layer of security, and present data differently.</li>
+                        <li><strong>Indexes:</strong> Special lookup tables that the database can use to speed up data retrieval. Creating an index on a column can significantly improve the performance of queries.</li>
+                        <li><strong>Database Normalization:</strong> The process of organizing columns and tables to minimize data redundancy. The most common forms are First Normal Form (1NF), Second Normal Form (2NF), and Third Normal Form (3NF).</li>
+                    </ul>
                 </div>
             </div>
         </section>
