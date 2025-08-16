@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Complete SQL Mastery Guide: Interactive Edition</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600;700&family=Inter:wght@400;500&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <!-- Chosen Palette: Cute & Compact (Pastel Pink, Indigo, Slate) -->
+    <!-- Chosen Palette: Perplexity (Orange, Blue-Black, White) -->
     <!-- Application Structure Plan: A comprehensive, single-page application with a redesigned tabbed layout for a clear, step-by-step user journey. Each module is a separate tab panel, now with smart navigation buttons to move sequentially. This structure improves navigation and focus. The Gemini API powers the AI Assistant and the "Explain Query" feature. -->
     <!-- Visualization & Content Choices: 
     - Report Info: All core concepts -> Goal: Inform/Organize -> Viz: Interactive HTML/CSS Cards & Animated Diagrams -> Interaction: Hover/Click to reveal detailed definitions, keywords, use cases -> Justification: Breaks down complex theory into digestible, layered pieces. -> Library/Method: HTML/Tailwind/JS.
@@ -21,8 +21,8 @@
     - Report Info: Interview Questions -> Goal: Test Knowledge -> Viz: Interactive flashcard quiz -> Interaction: Click cards to reveal answers -> Justification: Reinforces learning through active recall. -> Library/Method: HTML/Tailwind/JS. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #475569; }
-        .font-heading { font-family: 'Poppins', sans-serif; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
+        .font-heading { font-family: 'Lexend', sans-serif; }
         .font-mono { font-family: 'Source Code Pro', monospace; }
         .nav-link { 
             transition: all 0.2s ease-in-out; 
@@ -30,14 +30,14 @@
             border-radius: 9999px; /* pill shape */
         }
         .nav-link.active { 
-            background-color: #ec4899; /* pink-500 */
+            background-color: #ea580c; /* orange-600 */
             color: white;
-            box-shadow: 0 4px 14px 0 rgb(236 72 153 / 39%);
+            box-shadow: 0 4px 14px 0 rgb(234 88 12 / 39%);
         }
-        .nav-link:not(.active):hover { background-color: #fce7f3; /* pink-100 */ color: #be185d; }
+        .nav-link:not(.active):hover { background-color: #fed7aa; /* orange-200 */ color: #c2410c; }
         .concept-card { transition: transform 0.2s, box-shadow 0.2s; }
         .concept-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
-        .command-btn.active, .category-btn.active { background-color: #4338ca; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .command-btn.active, .category-btn.active { background-color: #1e3a8a; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .output-table { width: 100%; border-collapse: collapse; }
         .output-table th, .output-table td { border: 1px solid #e2e8f0; padding: 6px 8px; text-align: left; font-size: 0.875rem; }
         .output-table th { background-color: #f1f5f9; }
@@ -47,7 +47,7 @@
         details[open] > summary::before { transform: rotate(90deg); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        .spinner { border: 2px solid #e2e8f0; border-top: 2px solid #ec4899; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        .spinner { border: 2px solid #e2e8f0; border-top: 2px solid #ea580c; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         /* Join Animation Styles */
@@ -55,32 +55,38 @@
         .join-table-viz { background-color: white; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.5rem; font-size: 0.75rem; min-height: 150px; }
         .join-table-viz .header { font-weight: bold; border-bottom: 1px solid #e2e8f0; margin-bottom: 0.25rem; padding-bottom: 0.25rem; }
         .join-row { display: flex; justify-content: space-between; padding: 0.25rem; border-radius: 0.25rem; margin-bottom: 0.25rem; transition: all 0.5s ease-in-out; background-color: #f8fafc; }
-        .join-process-area { display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; color: #4338ca; }
+        .join-process-area { display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; color: #1e3a8a; }
         @keyframes slide-in { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .result-row-enter { animation: slide-in 0.5s forwards; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; font-size: 1.25rem; vertical-align: bottom; margin-right: 0.25rem;}
+        
+        @media print {
+            body * { visibility: hidden; }
+            .print-area, .print-area * { visibility: visible; }
+            .print-area { position: absolute; left: 0; top: 0; }
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-600">
 
-    <header class="bg-white sticky top-0 z-50 shadow-md">
-        <div class="container mx-auto px-6">
+    <header class="bg-slate-800 text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 sm:px-6">
             <div class="flex justify-between items-center py-4">
-                 <h1 class="text-xl md:text-2xl font-bold font-heading text-slate-800 flex items-center">
-                    <span class="material-symbols-outlined mr-2 text-pink-500">database</span>
+                 <h1 class="text-xl md:text-2xl font-bold font-heading flex items-center">
+                    <span class="material-symbols-outlined mr-2 text-orange-400">database</span>
                     SQL Mastery Guide
                 </h1>
             </div>
-            <nav class="border-b border-slate-200">
+            <nav class="border-b border-slate-700">
                 <div class="flex flex-wrap gap-2 pb-3">
-                    <a data-tab="foundations" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">foundation</span>Foundations</a>
-                    <a data-tab="setup" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">build_circle</span>Setup</a>
-                    <a data-tab="commands" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">terminal</span>Commands</a>
-                    <a data-tab="keywords" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">key</span>Keywords</a>
-                    <a data-tab="ai-assistant" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">smart_toy</span>AI Assistant</a>
-                    <a data-tab="joins" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">merge_type</span>JOINs</a>
-                    <a data-tab="advanced" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">rocket_launch</span>Advanced</a>
-                    <a data-tab="prep" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-100 text-slate-600"><span class="material-symbols-outlined !text-base mr-1">school</span>Interview Prep</a>
+                    <a data-tab="foundations" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-700 text-slate-300"><span class="material-symbols-outlined !text-base mr-1">foundation</span>Foundations</a>
+                    <a data-tab="setup" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-700 text-slate-300"><span class="material-symbols-outlined !text-base mr-1">build_circle</span>Setup</a>
+                    <a data-tab="commands" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-700 text-slate-300"><span class="material-symbols-outlined !text-base mr-1">terminal</span>Commands</a>
+                    <a data-tab="keywords" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-700 text-slate-300"><span class="material-symbols-outlined !text-base mr-1">key</span>Keywords</a>
+                    <a data-tab="ai-assistant" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-700 text-slate-300"><span class="material-symbols-outlined !text-base mr-1">smart_toy</span>AI Assistant</a>
+                    <a data-tab="joins" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-700 text-slate-300"><span class="material-symbols-outlined !text-base mr-1">merge_type</span>JOINs</a>
+                    <a data-tab="advanced" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-700 text-slate-300"><span class="material-symbols-outlined !text-base mr-1">rocket_launch</span>Advanced</a>
+                    <a data-tab="prep" class="nav-link py-2 px-4 whitespace-nowrap flex items-center text-sm bg-slate-700 text-slate-300"><span class="material-symbols-outlined !text-base mr-1">school</span>Interview Prep</a>
                 </div>
             </nav>
         </div>
@@ -106,7 +112,7 @@
                 </div>
                 <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
                      <h3 class="text-lg font-bold font-heading text-slate-700 mb-2">The Language of SQL</h3>
-                     <p class="text-sm">SQL (Structured Query Language) is the standard language for relational databases. It's **declarative**: you state *what* you want, and the database determines *how* to get it.
+                     <p class="text-sm">SQL (Structured Query Language) is the standard language for relational databases. It's <i>declarative</i>: you state <em>what</em> you want, and the database determines <em>how</em> to get it.
                      <br><strong>Sublanguages:</strong> DQL, DML, DDL, DCL, TCL.</p>
                 </div>
                 <div class="concept-card bg-white p-5 rounded-lg shadow-sm border border-slate-200">
@@ -142,7 +148,7 @@
             <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg border border-slate-200">
                 <details class="mb-4 bg-slate-50 p-4 rounded-lg">
                     <summary class="text-lg font-heading text-slate-700">Installation Instructions</summary>
-                    <div class="mt-4 pl-4 border-l-2 border-pink-300 text-slate-600 space-y-2 text-sm">
+                    <div class="mt-4 pl-4 border-l-2 border-orange-300 text-slate-600 space-y-2 text-sm">
                         <p><strong>Windows:</strong> Download precompiled binaries from the SQLite website, extract them to `C:\sqlite`, and add this folder to your system's PATH.</p>
                         <p><strong>macOS:</strong> Open Terminal and run `brew install sqlite` (requires Homebrew).</p>
                         <p><strong>Linux (Debian/Ubuntu):</strong> Open a terminal and run `sudo apt-get install sqlite3`.</p>
@@ -151,7 +157,7 @@
                 </details>
                 <details class="bg-slate-50 p-4 rounded-lg">
                     <summary class="text-lg font-heading text-slate-700">Loading the Sample HR Database</summary>
-                    <div class="mt-4 pl-4 border-l-2 border-pink-300 text-slate-600 space-y-2 text-sm">
+                    <div class="mt-4 pl-4 border-l-2 border-orange-300 text-slate-600 space-y-2 text-sm">
                         <p>We will use a sample Human Resources (HR) database. Imagine you have downloaded the setup script `hr_database.sql`.</p>
                         <p>1. Open your terminal.</p>
                         <p>2. Navigate to where you saved the `.sql` file.</p>
@@ -197,9 +203,9 @@
             <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-slate-200">
                 <div class="mb-4">
                     <label for="nl-input" class="block text-sm font-medium text-slate-700 mb-2">Enter your request:</label>
-                    <textarea id="nl-input" rows="3" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 transition" placeholder="e.g., Show me the first and last names of all employees in the Sales department, ordered by salary from highest to lowest"></textarea>
+                    <textarea id="nl-input" rows="3" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition" placeholder="e.g., Show me the first and last names of all employees in the Sales department, ordered by salary from highest to lowest"></textarea>
                 </div>
-                <button id="generate-sql-btn" class="w-full bg-pink-500 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-pink-600 transition-colors flex items-center justify-center shadow-md">
+                <button id="generate-sql-btn" class="w-full bg-orange-500 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center shadow-md">
                     Generate SQL
                 </button>
                 <div id="ai-output-container" class="mt-6">
@@ -433,13 +439,13 @@
                     <div class="bg-slate-800 text-white rounded-lg p-4 mb-4">
                         <pre><code id="current-query" class="font-mono text-sm">${content.code}</code></pre>
                     </div>
-                    <div class="bg-pink-100 border-l-4 border-pink-400 text-pink-800 p-4 rounded-r-lg text-sm">
+                    <div class="bg-orange-100 border-l-4 border-orange-400 text-orange-800 p-4 rounded-r-lg text-sm">
                         <p><strong>Tip:</strong> ${content.tip}</p>
                     </div>
                 </div>
                 <div>
                     <div class="flex space-x-2 mb-4">
-                        <button id="run-query-btn" class="flex-1 bg-indigo-500 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-600 transition-colors shadow">Run Query &#9654;</button>
+                        <button id="run-query-btn" class="flex-1 bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition-colors shadow">Run Query &#9654;</button>
                         <button id="explain-query-btn" class="flex-1 bg-slate-600 text-white font-bold py-2 px-4 rounded-md hover:bg-slate-700 transition-colors shadow">✨ Explain Query</button>
                     </div>
                     <div id="output-container" class="bg-white p-4 rounded-lg border border-slate-200 min-h-[200px] overflow-x-auto">
@@ -562,10 +568,10 @@
             if (!joinContent[joinType]) return;
             const content = joinContent[joinType];
             joinDisplay.innerHTML = `
-                <h3 class="text-xl font-bold font-heading text-pink-400 mb-2">${content.title}</h3>
+                <h3 class="text-xl font-bold font-heading text-orange-400 mb-2">${content.title}</h3>
                 <p class="text-slate-300 mb-4 text-sm">${content.description}</p>
                 <div class="bg-slate-900 rounded p-3">
-                    <pre><code class="font-mono text-xs text-pink-300">${content.code}</code></pre>
+                    <pre><code class="font-mono text-xs text-orange-300">${content.code}</code></pre>
                 </div>`;
             
             joinBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.join === joinType));
